@@ -22,7 +22,7 @@ function App() {
           count is {count}
         </button>
         <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+          Today is {new Date().toLocaleDateString()}
         </p>
       </div>
       <p className="read-the-docs">

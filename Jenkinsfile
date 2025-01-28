@@ -8,7 +8,6 @@ pipeline {
             }
             steps {
                 sh 'npm cache clean --force'
-                sh 'rm -rf node_modules package-lock.json'
                 sh 'npm install'
             }
         }
@@ -62,6 +61,10 @@ pipeline {
             steps {
                 withAWS(credentials: 'aws-credentials-s3', region: 'us-east-1') {
                     script {
+                        def timestamp = new Date().format('yyyy_MM_dd_HH_mm_ss')
+                        echo "Creando backup con fecha ${timestamp}"
+                        sh "aws s3 sync dist/ s3://bucket-codigo-backup/AbelGuevara/${timestamp}/"
+
                         echo "Subiendo los archivos al bucket s3..."
                         sh '''
                             aws s3 sync dist/ s3://bucket-codigo-abel --delete
