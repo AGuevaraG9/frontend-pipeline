@@ -64,7 +64,7 @@ pipeline {
                     script {
                         echo "Subiendo los archivos al bucket s3..."
                         sh '''
-                            aws s3 sync build/ s3://bucket-codigo-front --delete
+                            aws s3 sync dist/ s3://bucket-codigo-abel --delete
                         '''
                     }                   
                 }
