@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage ('Instalar dependencias...') {
             agent {
-                docker { image 'node:16-alpine'}
+                docker { image 'node:22-alpine'}
             }
             steps {
                 sh 'npm install'
@@ -13,7 +13,7 @@ pipeline {
 
         stage ('Construir proyecto con archivos estaticos...') {
             agent {
-                docker { image 'node:16-alpine'}
+                docker { image 'node:22-alpine'}
             }
             steps {
                 sh 'npm run build'
