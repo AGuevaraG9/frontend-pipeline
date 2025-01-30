@@ -23,6 +23,8 @@ function App() {
         </button>
         <p>
           Today is {new Date().toLocaleDateString()}
+          <hr/>
+          version 2.0
         </p>
       </div>
       <p className="read-the-docs">
