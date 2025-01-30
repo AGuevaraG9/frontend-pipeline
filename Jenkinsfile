@@ -62,7 +62,7 @@ pipeline {
                 withAWS(credentials: 'aws-credentials-s3', region: 'us-east-1') {
                     script {
                         def ultimaCarpetaDeBackup = sh(returnStdout: true, script: '''
-                            aws s3 ls s3://bucket-codigo-backup/AbelGuevara/master | awk '{print $2}' | grep VERSION_ | sort | tail -n 1
+                            aws s3 ls s3://bucket-codigo-backup/AbelGuevara/master/ | awk '{print $2}' | grep VERSION_ | sort | tail -n 1
                         ''').trim()
 
                         echo "Ultima carpeta del bucket backup: ${ultimaCarpetaDeBackup}"
