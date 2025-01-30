@@ -46,6 +46,9 @@ pipeline {
                     script {
                         def buckets  = sh(returnStdout: true, script: 'aws s3 ls').trim()
                         echo "Buckets disponibles en aws: \n${buckets}"
+                                
+                        def folders = sh(returnStdout: true, script: 'aws s3 ls s3://bucket-codigo-backup/AbelGuevara/').trim()
+                        echo "Carpetas disponibles en el bucket 'bucket-codigo-backup/AbelGuevara': \n${folders}"
                     }
                 }
             }
@@ -62,7 +65,7 @@ pipeline {
                 withAWS(credentials: 'aws-credentials-s3', region: 'us-east-1') {
                     script {
                         def ultimaCarpetaDeBackup = sh(returnStdout: true, script: '''
-                            aws s3 ls s3://bucket-codigo-backup/AbelGuevara/ | awk '{print $2}' | grep VERSION_ | sort | tail -n 1
+                            aws s3 ls s3://bucket-codigo-backup/AbelGuevara/master | awk '{print $2}' | grep VERSION_ | sort | tail -n 1
                         ''').trim()
 
                         echo "Ultima carpeta del bucket backup: ${ultimaCarpetaDeBackup}"
@@ -85,8 +88,11 @@ pipeline {
 
                         echo "Subiendo los archivos al bucket s3 en la carpeta ${baseVersion}..."
                         sh """
-                            aws s3 sync dist/ s3://bucket-codigo-backup/AbelGuevara/${baseVersion}/ --delete
+                            aws s3 sync dist/ s3://bucket-codigo-backup/AbelGuevara/master/${baseVersion}/ --delete
                         """
+
+                        def masterBackup = sh(returnStdout: true, script: 'aws s3 ls s3://bucket-codigo-backup/AbelGuevara/master/').trim()
+                        echo "Versiones disponibles para master': \n${masterBackup}"
                     }                   
                 }
             }
