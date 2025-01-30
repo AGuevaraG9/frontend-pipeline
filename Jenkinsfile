@@ -46,9 +46,6 @@ pipeline {
                     script {
                         def buckets  = sh(returnStdout: true, script: 'aws s3 ls').trim()
                         echo "Buckets disponibles en aws: \n${buckets}"
-                                
-                        def folders = sh(returnStdout: true, script: 'aws s3 ls s3://bucket-codigo-backup/AbelGuevara/').trim()
-                        echo "Carpetas disponibles en el bucket 'bucket-codigo-backup/AbelGuevara': \n${folders}"
                     }
                 }
             }
@@ -90,9 +87,6 @@ pipeline {
                         sh """
                             aws s3 sync dist/ s3://bucket-codigo-backup/AbelGuevara/master/${baseVersion}/ --delete
                         """
-
-                        def masterBackup = sh(returnStdout: true, script: 'aws s3 ls s3://bucket-codigo-backup/AbelGuevara/master/').trim()
-                        echo "Versiones disponibles para master': \n${masterBackup}"
                     }                   
                 }
             }
@@ -113,6 +107,29 @@ pipeline {
                             aws s3 sync dist/ s3://bucket-codigo-abel --delete
                         '''
                     }                   
+                }
+            }
+        }
+
+        stage('Validando carpetas de respaldo ...') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli:2.23.7'
+                    args '--entrypoint ""'
+                }
+            }
+            steps {
+                withAWS(credentials: 'aws-credentials-s3', region: 'us-east-1') {
+                    script {
+                        def folders = sh(returnStdout: true, script: 'aws s3 ls s3://bucket-codigo-backup/AbelGuevara/').trim()
+                        echo "Carpetas disponibles en el bucket 'bucket-codigo-backup/AbelGuevara': \n${folders}"
+
+                        def masterBackup = sh(returnStdout: true, script: 'aws s3 ls s3://bucket-codigo-backup/AbelGuevara/master/').trim()
+                        echo "Versiones disponibles para master': \n${masterBackup}"
+
+                        def vercelBackup = sh(returnStdout: true, script: 'aws s3 ls s3://bucket-codigo-backup/AbelGuevara/vercel/').trim()
+                        echo "Versiones disponibles para vercel': \n${vercelBackup}"
+                    }
                 }
             }
         }
