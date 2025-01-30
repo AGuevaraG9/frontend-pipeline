@@ -16,7 +16,7 @@ function App() {
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
         <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
+          <img src={reactLogo} className="logo_small react" alt="React logo2" />
         </a>
       </div>
       <h1>Vite + React</h1>
@@ -27,7 +27,7 @@ function App() {
         <p>
           Today is {new Date().toLocaleDateString()}
           <hr />
-          AWS Version 2.1
+          AWS Version 30.01.00.10
         </p>
       </div>
       <p className="read-the-docs">
