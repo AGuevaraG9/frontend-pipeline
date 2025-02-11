@@ -1,0 +1,11 @@
+name: Workflow dispatch event
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: mensage de Ubuntu
+        run: echo "Hello world!"

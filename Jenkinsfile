@@ -7,7 +7,8 @@ pipeline {
                 docker { image 'node:22-alpine'}
             }
             steps {
-                sh 'npm cache clean --force'
+                echo "Remover dependencias antiguas o referencias por el json.lock"
+                sh 'rm -rf node_modules package-lock.json'
                 sh 'npm install'
             }
         }

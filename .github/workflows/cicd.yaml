@@ -1,0 +1,43 @@
+name: Workflow vercel deploy
+
+on: 
+  push:
+    branches:
+      - vercel
+
+jobs:
+  deploy-vercel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Instalar dependencias...
+        run: npm install
+
+      - name: Compilar proyecto...
+        run: npm run build
+      
+      - name: Conectandome a aws...
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Validar conexion aws...
+        run: aws s3 ls
+      
+      - name: Sync carpeta front en bucket..
+        run: aws s3 sync build/ ${{ secrets.BUCKET_NAME }} --delete
+
+      - name: Instalar vercel...
+        run: npm install -g vercel
+
+      - name: Deploy to vercel...
+        run: vercel deploy --prod --name github-actions-vercel --token=${{ secrets.VERCEL_TOKEN }} --yes
